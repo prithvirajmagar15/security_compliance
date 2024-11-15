@@ -59,3 +59,36 @@ An SQS queue can receive messages regarding stock levels, decoupling the invento
 Order Analytics:
 
 The order data can be streamed to an Amazon Kinesis data stream where various analytics functions analyze the usage patterns.
+
+Diagram Overview
+CopyReplit
++-------------------+        +-----------------------+
+|  User Interface    | ----->|    Amazon API Gateway  |
++-------------------+        +-----------+-----------+
+                                          |
+                                          V
+                                  +-----------------+
+                                  |     AWS Lambda   |
+                                  |  (Place Order)   |
+                                  +--------+--------+
+                                           |
+       +-------------------------------------------------------+
+       |                        |                               |
+       V                        V                               V
++-------------------+   +--------------------+         +------------------+
+|      Amazon SNS   |   |     SQS Queue      |         |   Amazon Kinesis |
+| (Order Notifications|   | (Inventory Updates)|         | (Order Analytics)|
+|    to Email, SMS)  |   +--------------------+         +------------------+
++-------------------+   |     (Decoupled)    |                     |
+                                       |                        V
+                                       |                  +-----------------+
+                                       |                  |   AWS Lambda    |
+                                       |                  |  (Analytics)    |
+                                       |                  +-----------------+
+                                       V
+                                +----------------+
+                                |  Amazon DynamoDB |
+                                |   (Order Data)    |
+                                +----------------+
+Conclusion
+Decoupling components of an architecture using AWS services enhances flexibility, scalability, and maintainability. By leveraging message queues, event-driven architectures, and a combination of different AWS services, applications can be designed to operate independently while still working together effectively. This architecture ensures that failures in one part do not directly impact the others, leading to a more resilient system overall.
